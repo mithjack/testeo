@@ -1,16 +1,27 @@
-language: node_js
+dist: trusty
+sudo: falselanguage: node_js
 node_js:
-  - "11.0"
-branches:
+  - "11"
+  branches:
   only:
-    - master
-before_script:
-  - npm install -g @angular/cli
-script:
-  - npm install
-  - npm run build
-deploy:
+    - develop
+    - masternotifications:
+  email: falseaddons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stablecache:
+  directories:
+    - ./node_modulesinstall:
+  - npm installscript:
+  - npm run test -- --watch=false --no-progress --
+    browsers=ChromeHeadlessNoSandboxbefore_deploy:
+  - npm run build -- --prod --base-href /IP3/
+  - cp dist/IP3/index.html dist/IP3/404.htmldeploy:
+  provider: pages
   skip_cleanup: true
-  provider: firebase
-  token:
-    secure: ""
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/IP3
+  on:
+    branch: master
